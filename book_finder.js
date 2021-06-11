@@ -18,8 +18,8 @@ const fetchBooks = async (searchTerm) => {
         return;
     }
 
-    const books = response.data.items;
-    formatBooks(books);
+    const books = formatBooks(response.data.items);
+    printBooks(books);
 };
 
 const formatBooks = (books) => {
@@ -31,7 +31,11 @@ const formatBooks = (books) => {
         newBook['publisher'] = book.volumeInfo.publisher;
         formattedBooks.push(newBook);
     });
-    formattedBooks.forEach((book, idx) => {
+    return formattedBooks;
+};
+
+const printBooks = (books) => {
+    books.forEach((book, idx) => {
         console.log(`#${idx + 1}: 
         title: ${book.title}
         author: ${book.author}
