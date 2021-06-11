@@ -24,6 +24,10 @@ const getUserInput = () => {
                 running = false;
                 break;
             case 'save':
+                saveBook(responseArr[1]);
+                break;
+            case 'view':
+                fetchReadingList();
                 break;
             default:
                 console.log('That is not a valid command');
@@ -38,7 +42,8 @@ const showHelp = () => {
 
     'help': Shows the command list. 
     'search ____' : Searches the Google Books API for books matching your search term. ex: 'search puppies'
-    'save ___' : Saves the book corresponding to the number entered. ex: 'save 2'
+    'view' : fetches the books saved to your reading list. 
+    'save ___' : Saves the book to your reading list that corresponds to the number entered. ex: 'save 2'
     'quit': Exits the application. 
     
     `);
@@ -82,8 +87,10 @@ const printBooks = (books) => {
     });
 };
 
+const saveBook = (bookNumber) => {};
+
+const fetchReadingList = () => {};
 while (running) {
     running = false;
     getUserInput();
 }
-// fetchBooks('puppy');
