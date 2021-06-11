@@ -9,13 +9,16 @@ let running = true;
 const getUserInput = () => {
     const q = "What would you like to do? Type 'help' to see a list of commands.\n";
     prompt(q).then((response) => {
-        switch (response) {
+        let responseArr = response.split(' ');
+        switch (responseArr[0]) {
             case 'help':
                 showHelp();
                 getUserInput();
                 break;
             case 'search':
-                fetchBooks('javascript');
+                fetchBooks(responseArr[1]).then(() => {
+                    getUserInput();
+                });
                 break;
             case 'quit':
                 running = false;
