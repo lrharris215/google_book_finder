@@ -18,6 +18,19 @@ const fetchBooks = async (searchTerm) => {
         return;
     }
 
-    console.log(response.data.items);
+    const books = response.data.items;
+    console.log(formatBooks(books));
+};
+
+const formatBooks = (books) => {
+    const formattedBooks = [];
+    books.forEach((book) => {
+        let newBook = {};
+        newBook['title'] = book.volumeInfo.title;
+        newBook['author'] = book.volumeInfo.authors[0];
+        newBook['publisher'] = book.volumeInfo.publisher;
+        formattedBooks.push(newBook);
+    });
+    return formattedBooks;
 };
 fetchBooks('puppy');
