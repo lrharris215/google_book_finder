@@ -1,8 +1,33 @@
 import axios from 'axios';
+import { prompt } from './util.js';
 
 const APIKey = 'AIzaSyCRKpzT1nATS0sUG0LGw88GgdIedmOIRT4';
 
 const url = 'https://www.googleapis.com/books/v1/volumes?q=';
+
+let running = true;
+
+const getUserInput = () => {
+    const q = "What would you like to do? Type 'help' to see a list of commands.\n";
+    prompt(q).then((response) => {
+        switch (response) {
+            case 'help':
+                break;
+            case 'search':
+                fetchBooks('puppy');
+                break;
+            case 'quit':
+                running = false;
+                break;
+            case 'save':
+                break;
+            default:
+                console.log('That is not a valid command');
+                getUserInput();
+                break;
+        }
+    });
+};
 
 const fetchBooks = async (searchTerm) => {
     const search = `${url}${searchTerm}&maxResults=5&key=${APIKey}`;
@@ -43,4 +68,8 @@ const printBooks = (books) => {
     });
 };
 
-fetchBooks('puppy');
+while (running) {
+    running = false;
+    getUserInput();
+}
+// fetchBooks('puppy');
