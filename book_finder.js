@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { prompt } from './util.js';
-
-const APIKey = 'AIzaSyCRKpzT1nATS0sUG0LGw88GgdIedmOIRT4';
+import { APIKey } from './keys.js';
 
 const url = 'https://www.googleapis.com/books/v1/volumes?q=';
 
@@ -10,9 +9,11 @@ let running = true;
 const getUserInput = () => {
     const q = "What would you like to do? Type 'help' to see a list of commands.\n";
     prompt(q).then((response) => {
+        console.log(typeof response);
         switch (response) {
             case 'help':
                 showHelp();
+                getUserInput();
                 break;
             case 'search':
                 fetchBooks('puppy');
