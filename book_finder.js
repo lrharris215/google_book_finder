@@ -19,7 +19,7 @@ const fetchBooks = async (searchTerm) => {
     }
 
     const books = response.data.items;
-    console.log(formatBooks(books));
+    formatBooks(books);
 };
 
 const formatBooks = (books) => {
@@ -31,6 +31,12 @@ const formatBooks = (books) => {
         newBook['publisher'] = book.volumeInfo.publisher;
         formattedBooks.push(newBook);
     });
-    return formattedBooks;
+    formattedBooks.forEach((book, idx) => {
+        console.log(`#${idx + 1}: 
+        title: ${book.title}
+        author: ${book.author}
+        publisher: ${book.publisher}`);
+    });
 };
+
 fetchBooks('puppy');
