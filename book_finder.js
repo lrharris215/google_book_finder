@@ -90,7 +90,5 @@ const printBooks = (books) => {
 const saveBook = (bookNumber) => {};
 
 const fetchReadingList = () => {};
-while (running) {
-    running = false;
-    getUserInput();
-}
+
+getUserInput();
