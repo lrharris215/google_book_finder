@@ -12,6 +12,7 @@ const getUserInput = () => {
     prompt(q).then((response) => {
         switch (response) {
             case 'help':
+                showHelp();
                 break;
             case 'search':
                 fetchBooks('puppy');
@@ -28,7 +29,17 @@ const getUserInput = () => {
         }
     });
 };
+const showHelp = () => {
+    console.log(`
+    List of commands:
 
+    'help': Shows the command list. 
+    'search ____' : Searches the Google Books API for books matching your search term. ex: 'search puppies'
+    'save ___' : Saves the book corresponding to the number entered. ex: 'save 2'
+    'quit': Exits the application. 
+    
+    `);
+};
 const fetchBooks = async (searchTerm) => {
     const search = `${url}${searchTerm}&maxResults=5&key=${APIKey}`;
     let response;
