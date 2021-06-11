@@ -1,10 +1,12 @@
 import axios from 'axios';
-import { prompt } from './util.js';
+import { prompt, jsonReader, jsonWriter, errorLog } from './util.js';
 
 const { API_KEY } = process.env;
 const url = 'https://www.googleapis.com/books/v1/volumes?q=';
+const readingListFilePath = './reading_list.json';
 
-let running = true;
+let fetchedBooks = [];
+// let running = true;
 
 const getUserInput = () => {
     const q = "What would you like to do? Type 'help' to see a list of commands.\n";
@@ -21,13 +23,17 @@ const getUserInput = () => {
                 });
                 break;
             case 'quit':
-                running = false;
+                // running = false;
                 break;
             case 'save':
-                saveBook(responseArr[1]);
+                saveBook(responseArr[1]).then(() => {
+                    getUserInput();
+                });
+
                 break;
             case 'view':
-                fetchReadingList();
+                viewReadingList();
+
                 break;
             default:
                 console.log('That is not a valid command');
@@ -58,7 +64,7 @@ const fetchBooks = async (searchTerm) => {
             headers: { Accept: 'application/json' },
         });
     } catch (err) {
-        console.log(err);
+        errorLog(err);
         return;
     }
 
@@ -75,6 +81,7 @@ const formatBooks = (books) => {
         newBook['publisher'] = book.volumeInfo.publisher;
         formattedBooks.push(newBook);
     });
+    fetchedBooks = formattedBooks;
     return formattedBooks;
 };
 
@@ -87,8 +94,38 @@ const printBooks = (books) => {
     });
 };
 
-const saveBook = (bookNumber) => {};
+const saveBook = async (bookNumber) => {
+    let idx = parseInt(bookNumber) - 1;
+    let book = fetchedBooks[idx];
+    console.log(fetchedBooks[idx]);
+    await jsonWriter(readingListFilePath, book);
+};
+const fetchReadingList = async () => {
+    return jsonReader(readingListFilePath, (err, savedBooksList) => {
+        if (err) {
+            errorLog(err);
+            return;
+        }
+        let readingList = savedBooksList.readingList;
+        // console.log(readingList);
+        // console.log(`inside fetch`);
 
-const fetchReadingList = () => {};
+        return readingList;
+    });
+};
+
+const viewReadingList = async () => {
+    let readingList;
+    try {
+        readingList = await fetchReadingList();
+        console.log('viewReadingList');
+        console.log(readingList);
+    } catch (err) {
+        errorLog(err);
+        return;
+    }
+    // console.log('viewReadingList');
+    // console.log(readingList);
+};
 
 getUserInput();

@@ -21,18 +21,34 @@ export const prompt = (question) => {
     });
 };
 
-export const jsonReader = (filePath, callback) => {
-    fs.readFile(filePath, (err, data) => {
-        if (err) {
-            return callback && callback(err);
-        }
+// export const jsonReader = (filePath, callback) => {
+//     fs.readFile(filePath, (err, data) => {
+//         if (err) {
+//             return callback && callback(err);
+//         }
+//         try {
+//             const object = JSON.parse(data);
+//             return callback && callback(null, object);
+//         } catch (err) {
+//             return callback && callback(err);
+//         }
+//     });
+// };
+
+export const jsonReader = async (filePath) => {
+    {
         try {
-            const object = JSON.parse(data);
-            return callback && callback(null, object);
+            fs.readFile(filePath, (err, data) => {
+                if (err) {
+                    errorLog(err);
+                    return;
+                }
+                return JSON.parse(data);
+            });
         } catch (err) {
-            return callback && callback(err);
+            errorLog(err);
         }
-    });
+    }
 };
 
 export const jsonWriter = (filePath, data) => {
