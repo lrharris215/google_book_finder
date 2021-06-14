@@ -101,31 +101,23 @@ const saveBook = async (bookNumber) => {
     await jsonWriter(readingListFilePath, book);
 };
 const fetchReadingList = async () => {
-    return jsonReader(readingListFilePath, (err, savedBooksList) => {
-        if (err) {
-            errorLog(err);
-            return;
-        }
-        let readingList = savedBooksList.readingList;
-        // console.log(readingList);
-        // console.log(`inside fetch`);
-
-        return readingList;
-    });
+    const readingList = await jsonReader(readingListFilePath);
+    if (!readingList) {
+        console.log('Your reading list is empty!');
+        return [];
+    }
+    return readingList.readingList;
 };
 
 const viewReadingList = async () => {
     let readingList;
     try {
         readingList = await fetchReadingList();
-        console.log('viewReadingList');
-        console.log(readingList);
+        printBooks(readingList);
     } catch (err) {
         errorLog(err);
         return;
     }
-    // console.log('viewReadingList');
-    // console.log(readingList);
 };
 
 getUserInput();

@@ -35,20 +35,29 @@ export const prompt = (question) => {
 //     });
 // };
 
+// export const jsonReader = async (filePath) => {
+//     try {
+//         fs.readFile(filePath, (err, data) => {
+//             if (err) {
+//                 errorLog(err);
+//                 return;
+//             }
+//             return JSON.parse(data);
+//         });
+//     } catch (err) {
+//         errorLog(err);
+//     }
+// };
+
 export const jsonReader = async (filePath) => {
-    {
-        try {
-            fs.readFile(filePath, (err, data) => {
-                if (err) {
-                    errorLog(err);
-                    return;
-                }
-                return JSON.parse(data);
-            });
-        } catch (err) {
-            errorLog(err);
-        }
+    let data;
+    try {
+        data = await fs.promises.readFile(filePath);
+    } catch (err) {
+        errorLog(err);
+        return;
     }
+    return JSON.parse(data);
 };
 
 export const jsonWriter = (filePath, data) => {
