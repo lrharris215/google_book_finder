@@ -1,7 +1,7 @@
 import axios from 'axios';
 import chalk from 'chalk';
 import { prompt, jsonReader, jsonWriter, errorLog, successLog } from './util.js';
-import { validateSave } from './validations.js';
+import { validateSave, validateSearch } from './validations.js';
 
 const { API_KEY } = process.env;
 const url = 'https://www.googleapis.com/books/v1/volumes?q=';
@@ -20,9 +20,15 @@ const getUserInput = () => {
                 getUserInput();
                 break;
             case 'search':
-                fetchBooks(responseArr[1]).then(() => {
+                let searchTerm = responseArr.slice(1).join(' ');
+                if (!validateSearch(searchTerm)) {
                     getUserInput();
-                });
+                } else {
+                    fetchBooks(searchTerm).then(() => {
+                        getUserInput();
+                    });
+                }
+
                 break;
             case 'quit':
                 // running = false;
