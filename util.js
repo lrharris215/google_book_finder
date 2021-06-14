@@ -12,14 +12,14 @@ export const successLog = (successString) => {
     console.log(sLog);
 };
 export const prompt = (question) => {
-    const r = readline.createInterface({
+    const readLine = readline.createInterface({
         input: process.stdin,
         output: process.stdout,
         terminal: false,
     });
     return new Promise((resolve, error) => {
-        r.question(question, (answer) => {
-            r.close();
+        readLine.question(question, (answer) => {
+            readLine.close();
             resolve(answer);
         });
     });

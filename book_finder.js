@@ -10,8 +10,8 @@ let fetchedBooks = [];
 // let running = true;
 
 const getUserInput = () => {
-    const q = `\nWhat would you like to do? Type ${chalk.magentaBright('help')} to see a list of commands.\n\n`;
-    prompt(q).then((response) => {
+    const query = `\nWhat would you like to do? Type ${chalk.magentaBright('help')} to see a list of commands.\n\n`;
+    prompt(query).then((response) => {
         let responseArr = response.split(' ');
         switch (responseArr[0]) {
             case 'help':
