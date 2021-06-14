@@ -1,6 +1,6 @@
 import axios from 'axios';
 import chalk from 'chalk';
-import { prompt, jsonReader, jsonWriter, errorLog } from './util.js';
+import { prompt, jsonReader, jsonWriter, errorLog, successLog } from './util.js';
 
 const { API_KEY } = process.env;
 const url = 'https://www.googleapis.com/books/v1/volumes?q=';
@@ -25,6 +25,7 @@ const getUserInput = () => {
                 break;
             case 'quit':
                 // running = false;
+                successLog('Quitting application. Goodbye!');
                 break;
             case 'save':
                 saveBook(responseArr[1]);
@@ -110,7 +111,7 @@ const saveBook = (bookNumber) => {
     }
     try {
         jsonWriter(readingListFilePath, readingList);
-        console.log(chalk.green('Book successfully saved!'));
+        successLog('Book successfully saved!');
     } catch (err) {
         errorLog(err);
     }

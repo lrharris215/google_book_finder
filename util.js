@@ -7,6 +7,10 @@ export const errorLog = (error) => {
     const eLog = chalk.red(chalk.bold('ERROR: ' + error));
     console.log(eLog);
 };
+export const successLog = (successString) => {
+    const sLog = chalk.greenBright(successString);
+    console.log(sLog);
+};
 export const prompt = (question) => {
     const r = readline.createInterface({
         input: process.stdin,
