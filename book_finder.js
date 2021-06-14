@@ -26,9 +26,8 @@ const getUserInput = () => {
                 // running = false;
                 break;
             case 'save':
-                saveBook(responseArr[1]).then(() => {
-                    getUserInput();
-                });
+                saveBook(responseArr[1]);
+                getUserInput();
 
                 break;
             case 'view':
@@ -94,25 +93,36 @@ const printBooks = (books) => {
     });
 };
 
-const saveBook = async (bookNumber) => {
+const saveBook = (bookNumber) => {
     let idx = parseInt(bookNumber) - 1;
     let book = fetchedBooks[idx];
-    console.log(fetchedBooks[idx]);
-    await jsonWriter(readingListFilePath, book);
+    let readingList = [];
+    try {
+        readingList = fetchReadingList(readingListFilePath);
+        readingList.push(book);
+    } catch {
+        readingList = [book];
+    }
+    try {
+        jsonWriter(readingListFilePath, readingList);
+        console.log('Book successfully saved!');
+    } catch (err) {
+        errorLog(err);
+    }
 };
 const fetchReadingList = () => {
     const readingList = jsonReader(readingListFilePath);
     if (!readingList) {
-        // console.log('Your reading list is empty!');
         throw 'Your Reading List is empty!';
     }
-    return readingList.readingList;
+    return readingList;
 };
 
 const viewReadingList = () => {
     let readingList;
     try {
         readingList = fetchReadingList();
+        console.log('Your Reading List:');
         printBooks(readingList);
     } catch (err) {
         errorLog(err);

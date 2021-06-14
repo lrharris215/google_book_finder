@@ -26,18 +26,11 @@ export const jsonReader = (filePath) => {
     try {
         data = fs.readFileSync(filePath);
     } catch (err) {
-        errorLog(err);
         return;
     }
     return JSON.parse(data);
 };
 
 export const jsonWriter = (filePath, data) => {
-    fs.writeFile(filePath, JSON.stringify(data), (err) => {
-        if (err) {
-            errorLog(err);
-        } else {
-            console.log('Writing to JSON succeeded!');
-        }
-    });
+    fs.writeFileSync(filePath, JSON.stringify(data));
 };
