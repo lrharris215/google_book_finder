@@ -95,7 +95,7 @@ const formatBooks = (books) => {
         if (!book.volumeInfo.authors) {
             newBook['author'] = 'N/A';
         } else {
-            newBook['author'] = book.volumeInfo.authors[0];
+            newBook['author'] = book.volumeInfo.authors.join(', ');
         }
         if (!book.volumeInfo.publisher) {
             newBook['publisher'] = 'N/A';
@@ -115,7 +115,7 @@ const printBooks = (books) => {
     books.forEach((book, idx) => {
         console.log(`${chalk.yellow.bold(`#${idx + 1}:`)}
         Title: ${book.title}
-        Author: ${book.author}
+        Author(s): ${book.author}
         Publisher: ${book.publisher}`);
     });
 };
