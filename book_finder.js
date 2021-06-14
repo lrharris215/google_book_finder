@@ -93,12 +93,16 @@ const formatBooks = (books) => {
         let newBook = {};
         newBook['title'] = book.volumeInfo.title;
         if (!book.volumeInfo.authors) {
-            newBook['author'] = 'Anonymous';
+            newBook['author'] = 'N/A';
         } else {
             newBook['author'] = book.volumeInfo.authors[0];
         }
+        if (!book.volumeInfo.publisher) {
+            newBook['publisher'] = 'N/A';
+        } else {
+            newBook['publisher'] = book.volumeInfo.publisher;
+        }
 
-        newBook['publisher'] = book.volumeInfo.publisher;
         console.log(newBook);
         formattedBooks.push(newBook);
     });
@@ -153,5 +157,4 @@ const viewReadingList = () => {
     getUserInput();
 };
 
-// getUserInput();
-fetchBooks('cute puppies');
+getUserInput();
