@@ -13,3 +13,10 @@ export const validateSave = (input, fetchedBooks) => {
     }
     return true;
 };
+
+export const validateSearch = (input) => {
+    if (input.length < 2) {
+        errorLog('You must enter a term to search!');
+        return false;
+    }
+};

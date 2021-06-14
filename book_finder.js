@@ -68,6 +68,7 @@ const showHelp = () => {
 const fetchBooks = async (searchTerm) => {
     const search = `${url}${searchTerm}&maxResults=5&key=${API_KEY}`;
     let response;
+
     try {
         response = await axios({
             method: 'GET',
@@ -80,19 +81,28 @@ const fetchBooks = async (searchTerm) => {
     }
 
     const books = formatBooks(response.data.items);
+
     successLog(`\nTop 5 Books matching '${searchTerm}':\n`);
     printBooks(books);
 };
 
 const formatBooks = (books) => {
     const formattedBooks = [];
+    console.log(books.length);
     books.forEach((book) => {
         let newBook = {};
         newBook['title'] = book.volumeInfo.title;
-        newBook['author'] = book.volumeInfo.authors[0];
+        if (!book.volumeInfo.authors) {
+            newBook['author'] = 'Anonymous';
+        } else {
+            newBook['author'] = book.volumeInfo.authors[0];
+        }
+
         newBook['publisher'] = book.volumeInfo.publisher;
+        console.log(newBook);
         formattedBooks.push(newBook);
     });
+
     fetchedBooks = formattedBooks;
     return formattedBooks;
 };
@@ -143,4 +153,5 @@ const viewReadingList = () => {
     getUserInput();
 };
 
-getUserInput();
+// getUserInput();
+fetchBooks('cute puppies');
