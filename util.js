@@ -8,7 +8,7 @@ export const errorLog = (error) => {
     console.log(eLog);
 };
 export const successLog = (successString) => {
-    const sLog = chalk.greenBright(successString);
+    const sLog = chalk.greenBright.bold(successString);
     console.log(sLog);
 };
 export const prompt = (question) => {

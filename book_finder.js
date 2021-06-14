@@ -10,7 +10,7 @@ let fetchedBooks = [];
 // let running = true;
 
 const getUserInput = () => {
-    const q = "What would you like to do? Type 'help' to see a list of commands.\n";
+    const q = `\nWhat would you like to do? Type ${chalk.magentaBright('help')} to see a list of commands.\n\n`;
     prompt(q).then((response) => {
         let responseArr = response.split(' ');
         switch (responseArr[0]) {
@@ -45,17 +45,17 @@ const getUserInput = () => {
 };
 const showHelp = () => {
     console.log(`
-    List of commands:
+    ${chalk.bold('List of commands:')}
 
-    ${chalk.magenta('help')} : Shows the command list. 
-    ${chalk.green(
+    ${chalk.magentaBright.bold('help')} : Shows the command list. 
+    ${chalk.green.bold(
         'search ____'
     )} : Searches the Google Books API for books matching your search term. ex: ${chalk.green('search puppies')}
-    ${chalk.cyanBright('view')} : fetches the books saved to your reading list. 
-    ${chalk.blueBright(
+    ${chalk.cyanBright.bold('view')} : fetches the books saved to your reading list. 
+    ${chalk.blueBright.bold(
         'save ___'
     )} : Saves the book to your reading list that corresponds to the number entered. ex: ${chalk.blueBright('save 2')}
-    ${chalk.red('quit')} : Exits the application. 
+    ${chalk.red.bold('quit')} : Exits the application. 
     
     `);
 };
@@ -74,6 +74,7 @@ const fetchBooks = async (searchTerm) => {
     }
 
     const books = formatBooks(response.data.items);
+    successLog(`\nTop 5 Books matching '${searchTerm}':\n`);
     printBooks(books);
 };
 
@@ -92,10 +93,10 @@ const formatBooks = (books) => {
 
 const printBooks = (books) => {
     books.forEach((book, idx) => {
-        console.log(`#${idx + 1}: 
-        title: ${book.title}
-        author: ${book.author}
-        publisher: ${book.publisher}`);
+        console.log(`${chalk.yellow.bold(`#${idx + 1}:`)}
+        Title: ${book.title}
+        Author: ${book.author}
+        Publisher: ${book.publisher}`);
     });
 };
 
@@ -128,7 +129,7 @@ const viewReadingList = () => {
     let readingList;
     try {
         readingList = fetchReadingList();
-        console.log('Your Reading List:');
+        console.log(`\n${chalk.yellow.bold('Your Reading List:')}\n`);
         printBooks(readingList);
     } catch (err) {
         errorLog(err);
