@@ -1,5 +1,12 @@
 import * as readline from 'readline';
+import * as fs from 'fs';
+//import chalk from 'chalk';
 
+export const errorLog = (error) => {
+    //chalk this later!!!
+    const eLog = `Error: ${error}`;
+    console.log(eLog);
+};
 export const prompt = (question) => {
     const r = readline.createInterface({
         input: process.stdin,
@@ -12,4 +19,18 @@ export const prompt = (question) => {
             resolve(answer);
         });
     });
+};
+
+export const jsonReader = (filePath) => {
+    let data;
+    try {
+        data = fs.readFileSync(filePath);
+    } catch (err) {
+        return;
+    }
+    return JSON.parse(data);
+};
+
+export const jsonWriter = (filePath, data) => {
+    fs.writeFileSync(filePath, JSON.stringify(data));
 };
