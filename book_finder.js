@@ -1,6 +1,7 @@
 import axios from 'axios';
 import chalk from 'chalk';
 import { prompt, jsonReader, jsonWriter, errorLog, successLog } from './util.js';
+import { validateSave } from './validations.js';
 
 const { API_KEY } = process.env;
 const url = 'https://www.googleapis.com/books/v1/volumes?q=';
@@ -28,7 +29,12 @@ const getUserInput = () => {
                 successLog('Quitting application. Goodbye!');
                 break;
             case 'save':
-                saveBook(responseArr[1]);
+                if (validateSave(responseArr, fetchedBooks)) {
+                    saveBook(responseArr[1]);
+                } else {
+                    errorLog('That is not a valid input.');
+                }
+
                 getUserInput();
 
                 break;
