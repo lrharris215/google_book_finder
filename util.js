@@ -1,11 +1,15 @@
 import * as readline from 'readline';
 import * as fs from 'fs';
-//import chalk from 'chalk';
+import chalk from 'chalk';
 
 export const errorLog = (error) => {
     //chalk this later!!!
-    const eLog = `Error: ${error}`;
+    const eLog = chalk.red(chalk.bold('ERROR: ' + error));
     console.log(eLog);
+};
+export const successLog = (successString) => {
+    const sLog = chalk.greenBright.bold(successString);
+    console.log(sLog);
 };
 export const prompt = (question) => {
     const r = readline.createInterface({

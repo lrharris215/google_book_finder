@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { prompt, jsonReader, jsonWriter, errorLog } from './util.js';
+import chalk from 'chalk';
+import { prompt, jsonReader, jsonWriter, errorLog, successLog } from './util.js';
 
 const { API_KEY } = process.env;
 const url = 'https://www.googleapis.com/books/v1/volumes?q=';
@@ -9,7 +10,7 @@ let fetchedBooks = [];
 // let running = true;
 
 const getUserInput = () => {
-    const q = "What would you like to do? Type 'help' to see a list of commands.\n";
+    const q = `\nWhat would you like to do? Type ${chalk.magentaBright('help')} to see a list of commands.\n\n`;
     prompt(q).then((response) => {
         let responseArr = response.split(' ');
         switch (responseArr[0]) {
@@ -24,6 +25,7 @@ const getUserInput = () => {
                 break;
             case 'quit':
                 // running = false;
+                successLog('Quitting application. Goodbye!');
                 break;
             case 'save':
                 saveBook(responseArr[1]);
@@ -35,7 +37,7 @@ const getUserInput = () => {
 
                 break;
             default:
-                console.log('That is not a valid command');
+                errorLog('That is not a valid command');
                 getUserInput();
                 break;
         }
@@ -43,13 +45,17 @@ const getUserInput = () => {
 };
 const showHelp = () => {
     console.log(`
-    List of commands:
+    ${chalk.bold('List of commands:')}
 
-    'help': Shows the command list. 
-    'search ____' : Searches the Google Books API for books matching your search term. ex: 'search puppies'
-    'view' : fetches the books saved to your reading list. 
-    'save ___' : Saves the book to your reading list that corresponds to the number entered. ex: 'save 2'
-    'quit': Exits the application. 
+    ${chalk.magentaBright.bold('help')} : Shows the command list. 
+    ${chalk.green.bold(
+        'search ____'
+    )} : Searches the Google Books API for books matching your search term. ex: ${chalk.green('search puppies')}
+    ${chalk.cyanBright.bold('view')} : fetches the books saved to your reading list. 
+    ${chalk.blueBright.bold(
+        'save ___'
+    )} : Saves the book to your reading list that corresponds to the number entered. ex: ${chalk.blueBright('save 2')}
+    ${chalk.red.bold('quit')} : Exits the application. 
     
     `);
 };
@@ -68,6 +74,7 @@ const fetchBooks = async (searchTerm) => {
     }
 
     const books = formatBooks(response.data.items);
+    successLog(`\nTop 5 Books matching '${searchTerm}':\n`);
     printBooks(books);
 };
 
@@ -86,10 +93,10 @@ const formatBooks = (books) => {
 
 const printBooks = (books) => {
     books.forEach((book, idx) => {
-        console.log(`#${idx + 1}: 
-        title: ${book.title}
-        author: ${book.author}
-        publisher: ${book.publisher}`);
+        console.log(`${chalk.yellow.bold(`#${idx + 1}:`)}
+        Title: ${book.title}
+        Author: ${book.author}
+        Publisher: ${book.publisher}`);
     });
 };
 
@@ -105,7 +112,7 @@ const saveBook = (bookNumber) => {
     }
     try {
         jsonWriter(readingListFilePath, readingList);
-        console.log('Book successfully saved!');
+        successLog('Book successfully saved!');
     } catch (err) {
         errorLog(err);
     }
@@ -122,7 +129,7 @@ const viewReadingList = () => {
     let readingList;
     try {
         readingList = fetchReadingList();
-        console.log('Your Reading List:');
+        console.log(`\n${chalk.yellow.bold('Your Reading List:')}\n`);
         printBooks(readingList);
     } catch (err) {
         errorLog(err);
