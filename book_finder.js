@@ -36,7 +36,7 @@ const getUserInput = () => {
 
                 break;
             default:
-                console.log('That is not a valid command');
+                errorLog('That is not a valid command');
                 getUserInput();
                 break;
         }
@@ -46,11 +46,15 @@ const showHelp = () => {
     console.log(`
     List of commands:
 
-    'help': Shows the command list. 
-    'search ____' : Searches the Google Books API for books matching your search term. ex: 'search puppies'
-    'view' : fetches the books saved to your reading list. 
-    'save ___' : Saves the book to your reading list that corresponds to the number entered. ex: 'save 2'
-    'quit': Exits the application. 
+    ${chalk.magenta('help')} : Shows the command list. 
+    ${chalk.green(
+        'search ____'
+    )} : Searches the Google Books API for books matching your search term. ex: ${chalk.green('search puppies')}
+    ${chalk.cyanBright('view')} : fetches the books saved to your reading list. 
+    ${chalk.blueBright(
+        'save ___'
+    )} : Saves the book to your reading list that corresponds to the number entered. ex: ${chalk.blueBright('save 2')}
+    ${chalk.red('quit')} : Exits the application. 
     
     `);
 };
@@ -106,7 +110,7 @@ const saveBook = (bookNumber) => {
     }
     try {
         jsonWriter(readingListFilePath, readingList);
-        console.log('Book successfully saved!');
+        console.log(chalk.green('Book successfully saved!'));
     } catch (err) {
         errorLog(err);
     }

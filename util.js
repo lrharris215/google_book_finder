@@ -4,7 +4,7 @@ import chalk from 'chalk';
 
 export const errorLog = (error) => {
     //chalk this later!!!
-    const eLog = `Error: ${error}`;
+    const eLog = chalk.red(chalk.bold('ERROR: ' + error));
     console.log(eLog);
 };
 export const prompt = (question) => {
