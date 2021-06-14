@@ -1,6 +1,6 @@
 import * as readline from 'readline';
 import * as fs from 'fs';
-//import chalk from 'chalk';
+import chalk from 'chalk';
 
 export const errorLog = (error) => {
     //chalk this later!!!

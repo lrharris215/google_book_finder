@@ -1,4 +1,5 @@
 import axios from 'axios';
+import chalk from 'chalk';
 import { prompt, jsonReader, jsonWriter, errorLog } from './util.js';
 
 const { API_KEY } = process.env;
