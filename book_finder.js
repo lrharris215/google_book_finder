@@ -8,7 +8,6 @@ const url = 'https://www.googleapis.com/books/v1/volumes?q=';
 const readingListFilePath = './reading_list.json';
 
 let fetchedBooks = [];
-// let running = true;
 
 const getUserInput = () => {
     const query = `\nWhat would you like to do? Type ${chalk.magentaBright('help')} to see a list of commands.\n\n`;
@@ -17,39 +16,37 @@ const getUserInput = () => {
         switch (responseArr[0]) {
             case 'help':
                 showHelp();
-                getUserInput();
                 break;
             case 'search':
                 let searchTerm = responseArr.slice(1).join(' ');
                 if (!validateSearch(searchTerm)) {
-                    getUserInput();
                 } else {
-                    fetchBooks(searchTerm).then(() => {
-                        getUserInput();
-                    });
+                    fetchBooks(searchTerm).then(() => {});
                 }
+                break;
 
-                break;
             case 'quit':
-                // running = false;
                 successLog('Quitting application. Goodbye!');
-                break;
+                return;
+
             case 'save':
                 if (validateSave(responseArr, fetchedBooks)) {
                     saveBook(responseArr[1]);
                 }
-                getUserInput();
 
                 break;
+
             case 'view':
                 viewReadingList();
 
                 break;
+
             default:
                 errorLog('That is not a valid command');
-                getUserInput();
+
                 break;
         }
+        getUserInput();
     });
 };
 const showHelp = () => {
@@ -161,7 +158,6 @@ const viewReadingList = () => {
     } catch (err) {
         errorLog(err);
     }
-    getUserInput();
 };
 
 if (validateApiKey(API_KEY)) {
