@@ -37,10 +37,7 @@ const getUserInput = () => {
             case 'save':
                 if (validateSave(responseArr, fetchedBooks)) {
                     saveBook(responseArr[1]);
-                } else {
-                    errorLog('That is not a valid input.');
                 }
-
                 getUserInput();
 
                 break;

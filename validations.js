@@ -1,14 +1,18 @@
 import { errorLog } from './util.js';
 
 export const validateSave = (input, fetchedBooks) => {
-    if (input.length < 2 || input.length > 2) {
+    const numberError = `You must enter a number between 1 and ${fetchedBooks.length} after the save command`;
+    if (input.length !== 2) {
+        errorLog('That is not a valid input');
+        return false;
+    } else if (fetchedBooks.length < 1) {
+        errorLog("You haven't searched for any books yet! Try typing 'search' followed by a topic.");
         return false;
     } else if (isNaN(input[1])) {
+        errorLog(numberError);
         return false;
-    } else if (input[1] < 1 || input[1] > 5) {
-        return false;
-    } else if (!fetchedBooks[input[1] - 1]) {
-        errorLog("You haven't searched for any books yet!");
+    } else if (input[1] < 1 || input[1] > fetchedBooks.length) {
+        errorLog(numberError);
         return false;
     }
     return true;
