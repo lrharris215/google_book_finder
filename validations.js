@@ -1,5 +1,14 @@
 import { errorLog } from './util.js';
 
+export const validateApiKey = (API_KEY) => {
+    if (!API_KEY) {
+        errorLog(
+            "You must set your terminal's API_KEY before running this program. Please see the README for instructions."
+        );
+        return false;
+    }
+    return true;
+};
 export const validateSave = (input, fetchedBooks) => {
     const numberError = `You must enter a number between 1 and ${fetchedBooks.length} after the save command`;
     if (input.length !== 2) {

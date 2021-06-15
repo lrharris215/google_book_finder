@@ -1,7 +1,7 @@
 import axios from 'axios';
 import chalk from 'chalk';
 import { prompt, jsonReader, jsonWriter, errorLog, successLog } from './util.js';
-import { validateSave, validateSearch, checkIfNewBook } from './validations.js';
+import { validateApiKey, validateSave, validateSearch, checkIfNewBook } from './validations.js';
 
 const { API_KEY } = process.env;
 const url = 'https://www.googleapis.com/books/v1/volumes?q=';
@@ -164,4 +164,6 @@ const viewReadingList = () => {
     getUserInput();
 };
 
-getUserInput();
+if (validateApiKey(API_KEY)) {
+    getUserInput();
+}
