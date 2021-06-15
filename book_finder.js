@@ -1,47 +1,46 @@
 import axios from 'axios';
 import chalk from 'chalk';
 import { prompt, jsonReader, jsonWriter, errorLog, successLog } from './util.js';
+import { validateApiKey, validateSave, validateSearch, isNewBook } from './validations.js';
 
 const { API_KEY } = process.env;
 const url = 'https://www.googleapis.com/books/v1/volumes?q=';
 const readingListFilePath = './reading_list.json';
 
 let fetchedBooks = [];
-// let running = true;
 
-const getUserInput = () => {
-    const q = `\nWhat would you like to do? Type ${chalk.magentaBright('help')} to see a list of commands.\n\n`;
-    prompt(q).then((response) => {
-        let responseArr = response.split(' ');
-        switch (responseArr[0]) {
-            case 'help':
-                showHelp();
-                getUserInput();
-                break;
-            case 'search':
-                fetchBooks(responseArr[1]).then(() => {
-                    getUserInput();
-                });
-                break;
-            case 'quit':
-                // running = false;
-                successLog('Quitting application. Goodbye!');
-                break;
-            case 'save':
+const getUserInput = async () => {
+    const query = `\nWhat would you like to do? Type ${chalk.magentaBright('help')} to see a list of commands.\n\n`;
+
+    const response = await prompt(query);
+    let responseArr = response.split(' ');
+
+    switch (responseArr[0]) {
+        case 'help':
+            showHelp();
+            break;
+        case 'search':
+            let searchTerm = responseArr.slice(1).join(' ');
+            if (validateSearch(searchTerm)) {
+                await fetchBooks(searchTerm);
+            }
+            break;
+        case 'quit':
+            successLog('Quitting application. Goodbye!');
+            return;
+        case 'save':
+            if (validateSave(responseArr, fetchedBooks)) {
                 saveBook(responseArr[1]);
-                getUserInput();
-
-                break;
-            case 'view':
-                viewReadingList();
-
-                break;
-            default:
-                errorLog('That is not a valid command');
-                getUserInput();
-                break;
-        }
-    });
+            }
+            break;
+        case 'view':
+            viewReadingList();
+            break;
+        default:
+            errorLog('That is not a valid command');
+            break;
+    }
+    getUserInput();
 };
 const showHelp = () => {
     console.log(`
@@ -62,6 +61,7 @@ const showHelp = () => {
 const fetchBooks = async (searchTerm) => {
     const search = `${url}${searchTerm}&maxResults=5&key=${API_KEY}`;
     let response;
+
     try {
         response = await axios({
             method: 'GET',
@@ -73,29 +73,27 @@ const fetchBooks = async (searchTerm) => {
         return;
     }
 
-    const books = formatBooks(response.data.items);
+    fetchedBooks = formatBooks(response.data.items);
+
     successLog(`\nTop 5 Books matching '${searchTerm}':\n`);
-    printBooks(books);
+    printBooks(fetchedBooks);
 };
 
 const formatBooks = (books) => {
-    const formattedBooks = [];
-    books.forEach((book) => {
-        let newBook = {};
-        newBook['title'] = book.volumeInfo.title;
-        newBook['author'] = book.volumeInfo.authors[0];
-        newBook['publisher'] = book.volumeInfo.publisher;
-        formattedBooks.push(newBook);
+    return books.map((book) => {
+        return {
+            title: book.volumeInfo.title,
+            author: book.volumeInfo.authors ? book.volumeInfo.authors.join(', ') : 'N/A',
+            publisher: book.volumeInfo.publisher || 'N/A',
+        };
     });
-    fetchedBooks = formattedBooks;
-    return formattedBooks;
 };
 
 const printBooks = (books) => {
     books.forEach((book, idx) => {
         console.log(`${chalk.yellow.bold(`#${idx + 1}:`)}
         Title: ${book.title}
-        Author: ${book.author}
+        Author(s): ${book.author}
         Publisher: ${book.publisher}`);
     });
 };
@@ -106,6 +104,10 @@ const saveBook = (bookNumber) => {
     let readingList = [];
     try {
         readingList = fetchReadingList(readingListFilePath);
+        if (isNewBook(readingList, book)) {
+            errorLog('This book is already on your reading list!');
+            return;
+        }
         readingList.push(book);
     } catch {
         readingList = [book];
@@ -134,7 +136,8 @@ const viewReadingList = () => {
     } catch (err) {
         errorLog(err);
     }
-    getUserInput();
 };
 
-getUserInput();
+if (validateApiKey(API_KEY)) {
+    getUserInput();
+}
