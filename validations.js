@@ -35,7 +35,7 @@ export const validateSearch = (input) => {
     return true;
 };
 
-export const checkIfNewBook = (library, book) => {
+export const isNewBook = (library, book) => {
     for (let i = 0; i < library.length; i++) {
         let lbook = library[i];
         if (lbook.title === book.title && lbook.author === book.author && lbook.publisher === book.publisher) {

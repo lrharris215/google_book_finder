@@ -1,7 +1,7 @@
 import axios from 'axios';
 import chalk from 'chalk';
 import { prompt, jsonReader, jsonWriter, errorLog, successLog } from './util.js';
-import { validateApiKey, validateSave, validateSearch, checkIfNewBook } from './validations.js';
+import { validateApiKey, validateSave, validateSearch, isNewBook } from './validations.js';
 
 const { API_KEY } = process.env;
 const url = 'https://www.googleapis.com/books/v1/volumes?q=';
@@ -9,45 +9,38 @@ const readingListFilePath = './reading_list.json';
 
 let fetchedBooks = [];
 
-const getUserInput = () => {
+const getUserInput = async () => {
     const query = `\nWhat would you like to do? Type ${chalk.magentaBright('help')} to see a list of commands.\n\n`;
-    prompt(query).then((response) => {
-        let responseArr = response.split(' ');
-        switch (responseArr[0]) {
-            case 'help':
-                showHelp();
-                break;
-            case 'search':
-                let searchTerm = responseArr.slice(1).join(' ');
-                if (!validateSearch(searchTerm)) {
-                } else {
-                    fetchBooks(searchTerm).then(() => {});
-                }
-                break;
 
-            case 'quit':
-                successLog('Quitting application. Goodbye!');
-                return;
+    const response = await prompt(query);
+    let responseArr = response.split(' ');
 
-            case 'save':
-                if (validateSave(responseArr, fetchedBooks)) {
-                    saveBook(responseArr[1]);
-                }
-
-                break;
-
-            case 'view':
-                viewReadingList();
-
-                break;
-
-            default:
-                errorLog('That is not a valid command');
-
-                break;
-        }
-        getUserInput();
-    });
+    switch (responseArr[0]) {
+        case 'help':
+            showHelp();
+            break;
+        case 'search':
+            let searchTerm = responseArr.slice(1).join(' ');
+            if (validateSearch(searchTerm)) {
+                await fetchBooks(searchTerm);
+            }
+            break;
+        case 'quit':
+            successLog('Quitting application. Goodbye!');
+            return;
+        case 'save':
+            if (validateSave(responseArr, fetchedBooks)) {
+                saveBook(responseArr[1]);
+            }
+            break;
+        case 'view':
+            viewReadingList();
+            break;
+        default:
+            errorLog('That is not a valid command');
+            break;
+    }
+    getUserInput();
 };
 const showHelp = () => {
     console.log(`
@@ -80,35 +73,20 @@ const fetchBooks = async (searchTerm) => {
         return;
     }
 
-    const books = formatBooks(response.data.items);
+    fetchedBooks = formatBooks(response.data.items);
 
     successLog(`\nTop 5 Books matching '${searchTerm}':\n`);
-    printBooks(books);
+    printBooks(fetchedBooks);
 };
 
 const formatBooks = (books) => {
-    const formattedBooks = [];
-    console.log(books.length);
-    books.forEach((book) => {
-        let newBook = {};
-        newBook['title'] = book.volumeInfo.title;
-        if (!book.volumeInfo.authors) {
-            newBook['author'] = 'N/A';
-        } else {
-            newBook['author'] = book.volumeInfo.authors.join(', ');
-        }
-        if (!book.volumeInfo.publisher) {
-            newBook['publisher'] = 'N/A';
-        } else {
-            newBook['publisher'] = book.volumeInfo.publisher;
-        }
-
-        console.log(newBook);
-        formattedBooks.push(newBook);
+    return books.map((book) => {
+        return {
+            title: book.volumeInfo.title,
+            author: book.volumeInfo.authors ? book.volumeInfo.authors.join(', ') : 'N/A',
+            publisher: book.volumeInfo.publisher || 'N/A',
+        };
     });
-
-    fetchedBooks = formattedBooks;
-    return formattedBooks;
 };
 
 const printBooks = (books) => {
@@ -126,7 +104,7 @@ const saveBook = (bookNumber) => {
     let readingList = [];
     try {
         readingList = fetchReadingList(readingListFilePath);
-        if (checkIfNewBook(readingList, book)) {
+        if (isNewBook(readingList, book)) {
             errorLog('This book is already on your reading list!');
             return;
         }
