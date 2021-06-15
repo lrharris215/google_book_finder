@@ -3,7 +3,6 @@ import * as fs from 'fs';
 import chalk from 'chalk';
 
 export const errorLog = (error) => {
-    //chalk this later!!!
     const eLog = chalk.red(chalk.bold('ERROR: ' + error));
     console.log(eLog);
 };
@@ -17,7 +16,7 @@ export const prompt = (question) => {
         output: process.stdout,
         terminal: false,
     });
-    return new Promise((resolve, error) => {
+    return new Promise((resolve, reject) => {
         readLine.question(question, (answer) => {
             readLine.close();
             resolve(answer);
