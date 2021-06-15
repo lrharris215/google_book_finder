@@ -1,7 +1,7 @@
 import axios from 'axios';
 import chalk from 'chalk';
 import { prompt, jsonReader, jsonWriter, errorLog, successLog } from './util.js';
-import { validateSave, validateSearch } from './validations.js';
+import { validateSave, validateSearch, checkIfNewBook } from './validations.js';
 
 const { API_KEY } = process.env;
 const url = 'https://www.googleapis.com/books/v1/volumes?q=';
@@ -132,6 +132,10 @@ const saveBook = (bookNumber) => {
     let readingList = [];
     try {
         readingList = fetchReadingList(readingListFilePath);
+        if (checkIfNewBook(readingList, book)) {
+            errorLog('This book is already on your reading list!');
+            return;
+        }
         readingList.push(book);
     } catch {
         readingList = [book];

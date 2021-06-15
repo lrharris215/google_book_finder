@@ -7,7 +7,7 @@ export const validateSave = (input, fetchedBooks) => {
         return false;
     } else if (input[1] < 1 || input[1] > 5) {
         return false;
-    } else if (!fetchedBooks[input[1]]) {
+    } else if (!fetchedBooks[input[1] - 1]) {
         errorLog("You haven't searched for any books yet!");
         return false;
     }
@@ -20,4 +20,14 @@ export const validateSearch = (input) => {
         return false;
     }
     return true;
+};
+
+export const checkIfNewBook = (library, book) => {
+    for (let i = 0; i < library.length; i++) {
+        let lbook = library[i];
+        if (lbook.title === book.title && lbook.author === book.author && lbook.publisher === book.publisher) {
+            return true;
+        }
+    }
+    return false;
 };
