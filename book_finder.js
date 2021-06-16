@@ -44,18 +44,20 @@ const getUserInput = async () => {
 };
 const showHelp = () => {
     console.log(`
-    ${chalk.bold('List of commands:')}
+        ${chalk.bold('List of commands:')}
 
-    ${chalk.magentaBright.bold('help')} : Shows the command list. 
-    ${chalk.green.bold(
-        'search ____'
-    )} : Searches the Google Books API for books matching your search term. ex: ${chalk.green('search puppies')}
-    ${chalk.cyanBright.bold('view')} : fetches the books saved to your reading list. 
-    ${chalk.blueBright.bold(
-        'save ___'
-    )} : Saves the book to your reading list that corresponds to the number entered. ex: ${chalk.blueBright('save 2')}
-    ${chalk.red.bold('quit')} : Exits the application. 
-    
+        ${chalk.magentaBright.bold('help')} : Shows the command list. 
+        ${chalk.green.bold(
+            'search ____'
+        )} : Searches the Google Books API for books matching your search term. ex: ${chalk.green('search puppies')}
+        ${chalk.cyanBright.bold('view')} : fetches the books saved to your reading list. 
+        ${chalk.blueBright.bold(
+            'save ___'
+        )} : Saves the book to your reading list that corresponds to the number entered. ex: ${chalk.blueBright(
+        'save 2'
+    )}
+        ${chalk.red.bold('quit')} : Exits the application. 
+        
     `);
 };
 const fetchBooks = async (searchTerm) => {
@@ -91,10 +93,12 @@ const formatBooks = (books) => {
 
 const printBooks = (books) => {
     books.forEach((book, idx) => {
-        console.log(`${chalk.yellow.bold(`#${idx + 1}:`)}
+        console.log(`
+    ${chalk.yellow.bold(`#${idx + 1}:`)}
         Title: ${book.title}
         Author(s): ${book.author}
-        Publisher: ${book.publisher}`);
+        Publisher: ${book.publisher}
+        ${chalk.yellow('_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _')}`);
     });
 };
 
