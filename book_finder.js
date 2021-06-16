@@ -43,6 +43,7 @@ const getUserInput = async () => {
     }
     getUserInput();
 };
+
 const showHelp = () => {
     console.log(`
         ${chalk.bold('List of commands:')}
@@ -61,6 +62,7 @@ const showHelp = () => {
         
     `);
 };
+
 const fetchBooks = async (searchTerm) => {
     const search = `${url}${searchTerm}&maxResults=5&key=${API_KEY}`;
     let response;
@@ -124,6 +126,7 @@ const saveBook = (bookNumber) => {
         errorLog(err);
     }
 };
+
 const fetchReadingList = () => {
     const readingList = jsonReader(readingListFilePath);
     if (!readingList) {

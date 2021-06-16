@@ -6,6 +6,7 @@ export const errorLog = (error) => {
     const eLog = chalk.red(chalk.bold('ERROR: ' + error));
     console.log(eLog);
 };
+
 export const successLog = (successString) => {
     const sLog = chalk.greenBright.bold(successString);
     console.log(sLog);
