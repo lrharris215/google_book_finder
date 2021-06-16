@@ -10,6 +10,8 @@ export const successLog = (successString) => {
     const sLog = chalk.greenBright.bold(successString);
     console.log(sLog);
 };
+
+//prompts the user to enter an input from the terminal
 export const prompt = (question) => {
     const readLine = readline.createInterface({
         input: process.stdin,
@@ -24,6 +26,7 @@ export const prompt = (question) => {
     });
 };
 
+//reads data from JSON files
 export const jsonReader = (filePath) => {
     let data;
     try {
@@ -34,6 +37,7 @@ export const jsonReader = (filePath) => {
     return JSON.parse(data);
 };
 
+//writes data to JSON files
 export const jsonWriter = (filePath, data) => {
     fs.writeFileSync(filePath, JSON.stringify(data));
 };

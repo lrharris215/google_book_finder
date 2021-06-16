@@ -7,6 +7,7 @@ const { API_KEY } = process.env;
 const url = 'https://www.googleapis.com/books/v1/volumes?q=';
 const readingListFilePath = './reading_list.json';
 
+//keeps track of the books returned from a search.
 let fetchedBooks = [];
 
 const getUserInput = async () => {

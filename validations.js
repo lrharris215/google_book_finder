@@ -1,5 +1,6 @@
 import { errorLog } from './util.js';
 
+//Makes sure there is an API key before running the program
 export const validateApiKey = (API_KEY) => {
     if (!API_KEY) {
         errorLog(
@@ -9,6 +10,8 @@ export const validateApiKey = (API_KEY) => {
     }
     return true;
 };
+
+//checks if the attempt to save is valid
 export const validateSave = (input, fetchedBooks) => {
     const numberError = `You must enter a number between 1 and ${fetchedBooks.length} after the save command`;
     if (input.length !== 2) {
@@ -27,6 +30,7 @@ export const validateSave = (input, fetchedBooks) => {
     return true;
 };
 
+//Prevents users from just running 'search' with no query string
 export const validateSearch = (input) => {
     if (input.length < 1) {
         errorLog('You must enter a term to search!');
@@ -35,6 +39,7 @@ export const validateSearch = (input) => {
     return true;
 };
 
+//Checks to see if the book the user is attempting to save already exists on the reading list.
 export const isNewBook = (library, book) => {
     for (let i = 0; i < library.length; i++) {
         let lbook = library[i];
