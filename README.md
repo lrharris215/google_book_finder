@@ -9,6 +9,7 @@ Before running the program, you must set your `API_KEY` in the terminal.
 ```
 export API_KEY=<YOUR API KEY>
 ```
+and then ```npm install``` to install the axios and chalk dependencies. 
 
 If you already have a Google Books API key, you can skip the next section.
 
