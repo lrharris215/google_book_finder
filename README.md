@@ -35,5 +35,5 @@ After that, you can type in one of the following 5 commands:
 
 I used the following modules in this project:
 
--   [Axios](https://github.com/axios/axios)
--   [Chalk](https://github.com/chalk/chalk)
+-   [Axios](https://github.com/axios/axios): Used to make the API calls to Google. 
+-   [Chalk](https://github.com/chalk/chalk): Used to colorize the terminal output.
