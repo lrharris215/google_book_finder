@@ -1,7 +1,15 @@
-import { hasApiKey } from '../validations.js';
+import sinon from 'sinon';
 import { expect } from 'chai';
+import { hasApiKey } from '../validations.js';
 
-describe('hasApiKey(API_KEY', () => {
+beforeEach(() => {
+    sinon.stub(console, 'log');
+});
+
+afterEach(() => {
+    console.log.restore();
+});
+describe('hasApiKey(API_KEY)', () => {
     it('should return true if there is an API_Key set', () => {
         const API_KEY = 'Totally a key here';
         expect(hasApiKey(API_KEY)).to.be.true;
