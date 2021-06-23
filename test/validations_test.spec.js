@@ -73,13 +73,15 @@ describe('isNewBook(library, book)', () => {
         { title: 'Book4', author: 'author4', publisher: 'publisher4' },
         { title: 'Book5', author: 'author5', publisher: 'publisher5' },
     ];
-    const newBook = { title: 'Book6', author: 'author6', publisher: 'publisher6' };
-    const oldBook = { title: 'Book5', author: 'author5', publisher: 'publisher5' };
 
     it('should return false if the user tries to save a book that is already on their reading list', () => {
+        const oldBook = { title: 'Book5', author: 'author5', publisher: 'publisher5' };
         expect(isNewBook(library, oldBook)).to.be.false;
     });
     it('should return true if the new book is not already on their reading list', () => {
+        const newBook = { title: 'Book6', author: 'author6', publisher: 'publisher6' };
+        const sameAuthorNewBook = { title: 'NewBook1', author: 'author1', publisher: 'publisher1' };
         expect(isNewBook(library, newBook)).to.be.true;
+        expect(isNewBook(library, sameAuthorNewBook)).to.be.true;
     });
 });
