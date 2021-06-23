@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 import { expect } from 'chai';
-import { hasApiKey, isSaveValid } from '../validations.js';
+import { hasApiKey, isSaveValid, isSearchValid, isNewBook } from '../validations.js';
 
 beforeEach(() => {
     sinon.stub(console, 'log');
@@ -50,5 +50,18 @@ describe('isSaveValid(input, fetchedBooks)', () => {
     });
     it('should return true if the second input is greater than 0 and less than the number of fetched books', () => {
         expect(isSaveValid(goodInput, fetchedBooks)).to.be.true;
+    });
+});
+
+describe('isSearchValid(input)', () => {
+    const goodInput = 'puppy';
+    const longButStillGoodInput = 'a really long but very specific sentence I want to search';
+    const badInput = '';
+    it('should return false if there is no search input', () => {
+        expect(isSearchValid(badInput)).to.be.false;
+    });
+    it('should return true no matter how many search terms are entered at once', () => {
+        expect(isSearchValid(goodInput)).to.be.true;
+        expect(isSearchValid(longButStillGoodInput)).to.be.true;
     });
 });
