@@ -111,7 +111,7 @@ const saveBook = (bookNumber) => {
     let readingList = [];
     try {
         readingList = fetchReadingList(readingListFilePath);
-        if (isNewBook(readingList, book)) {
+        if (!isNewBook(readingList, book)) {
             errorLog('This book is already on your reading list!');
             return;
         }

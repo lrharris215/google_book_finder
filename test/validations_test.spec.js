@@ -53,7 +53,7 @@ describe('isSaveValid(input, fetchedBooks)', () => {
     });
 });
 
-describe('isSearchValid(input)', () => {
+describe('isSearchValid(searchTerm)', () => {
     const goodInput = 'puppy';
     const longButStillGoodInput = 'a really long but very specific sentence I want to search';
     const badInput = '';
@@ -63,5 +63,23 @@ describe('isSearchValid(input)', () => {
     it('should return true no matter how many search terms are entered at once', () => {
         expect(isSearchValid(goodInput)).to.be.true;
         expect(isSearchValid(longButStillGoodInput)).to.be.true;
+    });
+});
+describe('isNewBook(library, book)', () => {
+    const library = [
+        { title: 'Book1', author: 'author1', publisher: 'publisher1' },
+        { title: 'Book2', author: 'author2', publisher: 'publisher2' },
+        { title: 'Book3', author: 'author3', publisher: 'publisher3' },
+        { title: 'Book4', author: 'author4', publisher: 'publisher4' },
+        { title: 'Book5', author: 'author5', publisher: 'publisher5' },
+    ];
+    const newBook = { title: 'Book6', author: 'author6', publisher: 'publisher6' };
+    const oldBook = { title: 'Book5', author: 'author5', publisher: 'publisher5' };
+
+    it('should return false if the user tries to save a book that is already on their reading list', () => {
+        expect(isNewBook(library, oldBook)).to.be.false;
+    });
+    it('should return true if the new book is not already on their reading list', () => {
+        expect(isNewBook(library, newBook)).to.be.true;
     });
 });
