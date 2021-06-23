@@ -1,7 +1,7 @@
 import axios from 'axios';
 import chalk from 'chalk';
 import { prompt, jsonReader, jsonWriter, errorLog, successLog } from './util.js';
-import { validateApiKey, validateSave, validateSearch, isNewBook } from './validations.js';
+import { hasApiKey, isSaveValid, isSearchValid, isNewBook } from './validations.js';
 
 const { API_KEY } = process.env;
 const url = 'https://www.googleapis.com/books/v1/volumes?q=';
@@ -22,7 +22,7 @@ const getUserInput = async () => {
             break;
         case 'search':
             let searchTerm = responseArr.slice(1).join(' ');
-            if (validateSearch(searchTerm)) {
+            if (isSearchValid(searchTerm)) {
                 await fetchBooks(searchTerm);
             }
             break;
@@ -30,7 +30,7 @@ const getUserInput = async () => {
             successLog('Quitting application. Goodbye!');
             return;
         case 'save':
-            if (validateSave(responseArr, fetchedBooks)) {
+            if (isSaveValid(responseArr, fetchedBooks)) {
                 saveBook(responseArr[1]);
             }
             break;
@@ -146,6 +146,6 @@ const viewReadingList = () => {
     }
 };
 
-if (validateApiKey(API_KEY)) {
+if (hasApiKey(API_KEY)) {
     getUserInput();
 }
