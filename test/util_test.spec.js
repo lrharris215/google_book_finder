@@ -10,6 +10,8 @@ describe('jsonReader(filePath)', () => {
 });
 
 describe('jsonWriter(filePath, data)', () => {
+    const newBook1 = { title: 'book1', author: 'author1', publisher: 'publisher1' };
+    const newBook2 = { title: 'book2', author: 'author2', publisher: 'publisher2' };
     it('writes data to json file');
-    it("creates a new file if one doesn't exist");
+    it("creates a new file if one doesn't exist", () => {});
 });
