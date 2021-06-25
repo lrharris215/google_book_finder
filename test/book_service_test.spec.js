@@ -10,12 +10,53 @@ chai.use(chaifs);
 
 const testPath = './test/save_book_test.json';
 const testApiKey = 'faketestingkey';
-const testResponse = {};
+const book1 = {
+    volumeInfo: {
+        title: 'book1',
+        authors: ['author1'],
+        publisher: 'publisher1',
+    },
+};
+const book2 = {
+    volumeInfo: {
+        title: 'book2',
+        authors: ['author2'],
+        publisher: 'publisher2',
+    },
+};
+const bookTitleOnly = {
+    volumeInfo: {
+        title: 'Anonymous Book',
+    },
+};
+const book2Authors = {
+    volumeInfo: {
+        title: 'book2',
+        authors: ['author1', 'author2'],
+        publisher: 'publisher2',
+    },
+};
+
+const testResponse = {
+    data: {
+        items: [book1, book2],
+    },
+};
 describe('BookService(filePath, api_key)', () => {
-    // describe('fetchBooks(searchTerm)', () => {
-    //     //will need a sinon stub
-    //     sinon.stub((axios, 'get')).resolves(testResponse);
-    // });
+    describe('fetchBooks(searchTerm)', () => {
+        let bookService;
+        before(() => {
+            bookService = new BookService(testPath, testApiKey);
+        });
+        it('should fetch the books', async () => {
+            sinon.stub(axios, 'get').resolves(testResponse);
+            await bookService.fetchBooks('test');
+            expect(bookService.fetchedBooks).to.eql([
+                { title: 'book1', author: 'author1', publisher: 'publisher1' },
+                { title: 'book2', author: 'author2', publisher: 'publisher2' },
+            ]);
+        });
+    });
 
     describe('formatBooks()', () => {
         //formats author/publisher correctly.
