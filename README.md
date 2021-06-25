@@ -32,9 +32,16 @@ After that, you can type in one of the following 5 commands:
 -   `view` : Shows you your saved Reading List.
 -   `quit` : Exits the program.
 
+# Testing
+
+Tests are written using Mocha/Chai. To run them, type `npm test` in the terminal. 
+
 # Sources/Technologies
 
 I used the following modules in this project:
 
 -   [Axios](https://github.com/axios/axios): Used to make the API calls to Google. 
 -   [Chalk](https://github.com/chalk/chalk): Used to colorize the terminal output.
+-   [Mocha](https://mochajs.org/): Used as a testing framework.
+-   [Chai](https://www.chaijs.com/): Used as an assertion library for testing. 
+-   [Sinon](https://sinonjs.org/): Used for test stubs.
