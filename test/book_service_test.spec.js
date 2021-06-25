@@ -12,10 +12,10 @@ const testPath = './test/save_book_test.json';
 const testApiKey = 'faketestingkey';
 const testResponse = {};
 describe('BookService(filePath, api_key)', () => {
-    describe('fetchBooks(searchTerm)', () => {
-        //will need a sinon stub
-        sinon.stub((axios, 'get')).resolves(testResponse);
-    });
+    // describe('fetchBooks(searchTerm)', () => {
+    //     //will need a sinon stub
+    //     sinon.stub((axios, 'get')).resolves(testResponse);
+    // });
 
     describe('formatBooks()', () => {
         //formats author/publisher correctly.
@@ -41,10 +41,13 @@ describe('BookService(filePath, api_key)', () => {
                 { title: 'book1', author: 'author1', publisher: 'publisher1' },
             ]);
         });
-        it('does not erase the previous reading list'),
-            () => {
-                //do something here don't forget this one.
-            };
+        it('does not erase the previous reading list', () => {
+            bookService.saveBook('2');
+            expect(bookService.fetchReadingList()).to.eql([
+                { title: 'book1', author: 'author1', publisher: 'publisher1' },
+                { title: 'book2', author: 'author2', publisher: 'publisher2' },
+            ]);
+        });
     });
     // describe('fetchReadingList');
     // describe('viewReadingList');
