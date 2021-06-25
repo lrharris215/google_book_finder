@@ -9,7 +9,7 @@ const readingListFilePath = './reading_list.json';
 
 const bookService = new BookService(readingListFilePath, API_KEY);
 
-export const getUserInput = async () => {
+const getUserInput = async () => {
     const query = `\nWhat would you like to do? Type ${chalk.magentaBright('help')} to see a list of commands.\n\n`;
 
     const response = await prompt(query);

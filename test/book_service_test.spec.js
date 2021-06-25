@@ -1,4 +1,5 @@
 import sinon from 'sinon';
+import axios from 'axios';
 import chai, { expect } from 'chai';
 import chaifs from 'chai-fs';
 import * as fs from 'fs';
@@ -9,10 +10,11 @@ chai.use(chaifs);
 
 const testPath = './test/save_book_test.json';
 const testApiKey = 'faketestingkey';
-
+const testResponse = {};
 describe('BookService(filePath, api_key)', () => {
     describe('fetchBooks(searchTerm)', () => {
         //will need a sinon stub
+        sinon.stub((axios, 'get')).resolves(testResponse);
     });
 
     describe('formatBooks()', () => {
@@ -39,7 +41,10 @@ describe('BookService(filePath, api_key)', () => {
                 { title: 'book1', author: 'author1', publisher: 'publisher1' },
             ]);
         });
-        it('does not erase the previous reading list');
+        it('does not erase the previous reading list'),
+            () => {
+                //do something here don't forget this one.
+            };
     });
     // describe('fetchReadingList');
     // describe('viewReadingList');

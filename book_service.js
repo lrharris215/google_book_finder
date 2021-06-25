@@ -17,11 +17,7 @@ export default class BookService {
         let response;
 
         try {
-            response = await axios({
-                method: 'GET',
-                url: search,
-                headers: { Accept: 'application/json' },
-            });
+            response = await axios.get(search, { headers: { Accept: 'applicaiton/json' } });
         } catch (err) {
             errorLog(err);
             return;
