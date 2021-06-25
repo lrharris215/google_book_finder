@@ -60,6 +60,25 @@ describe('BookService(filePath, api_key)', () => {
 
     describe('formatBooks()', () => {
         //formats author/publisher correctly.
+        let bookService;
+        before(() => {
+            bookService = new BookService(testPath, testApiKey);
+        });
+        it('formats the books title, author and publisher correctly', () => {
+            expect(bookService.formatBooks([book1])).to.eql([
+                { title: 'book1', author: 'author1', publisher: 'publisher1' },
+            ]);
+        });
+        it('formats the book when there is more than 1 author', () => {
+            expect(bookService.formatBooks([book2Authors])).to.eql([
+                { title: 'book2', author: 'author1, author2', publisher: 'publisher2' },
+            ]);
+        });
+        it('formats the book correctly when there is no author or publisher', () => {
+            expect(bookService.formatBooks([bookTitleOnly])).to.eql([
+                { title: 'Anonymous Book', author: 'N/A', publisher: 'N/A' },
+            ]);
+        });
     });
 
     describe('saveBook(bookNumber)', () => {
