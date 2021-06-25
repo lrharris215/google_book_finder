@@ -1,16 +1,15 @@
-import axios from 'axios';
 import chalk from 'chalk';
-import { prompt, jsonReader, jsonWriter, errorLog, successLog } from './util.js';
-import { hasApiKey, isSaveValid, isSearchValid, isNewBook } from './validations.js';
+import { prompt, errorLog, successLog } from './util.js';
+import { hasApiKey, isSaveValid, isSearchValid } from './validations.js';
+import BookService from './book_service.js';
 
 const { API_KEY } = process.env;
-const url = 'https://www.googleapis.com/books/v1/volumes?q=';
+
 const readingListFilePath = './reading_list.json';
 
-//keeps track of the books returned from a search.
-let fetchedBooks = [];
+const bookService = new BookService(readingListFilePath, API_KEY);
 
-const getUserInput = async () => {
+export const getUserInput = async () => {
     const query = `\nWhat would you like to do? Type ${chalk.magentaBright('help')} to see a list of commands.\n\n`;
 
     const response = await prompt(query);
@@ -23,15 +22,17 @@ const getUserInput = async () => {
         case 'search':
             let searchTerm = responseArr.slice(1).join(' ');
             if (isSearchValid(searchTerm)) {
-                await fetchBooks(searchTerm);
+                const books = await bookService.fetchBooks(searchTerm);
+                successLog(`\nTop 5 Books matching '${searchTerm}':\n`);
+                printBooks(books);
             }
             break;
         case 'quit':
             successLog('Quitting application. Goodbye!');
             return;
         case 'save':
-            if (isSaveValid(responseArr, fetchedBooks)) {
-                saveBook(responseArr[1]);
+            if (isSaveValid(responseArr, bookService.fetchedBooks)) {
+                bookService.saveBook(responseArr[1]);
             }
             break;
         case 'view':
@@ -62,38 +63,6 @@ const showHelp = () => {
         
     `);
 };
-
-const fetchBooks = async (searchTerm) => {
-    const search = `${url}${searchTerm}&maxResults=5&key=${API_KEY}`;
-    let response;
-
-    try {
-        response = await axios({
-            method: 'GET',
-            url: search,
-            headers: { Accept: 'application/json' },
-        });
-    } catch (err) {
-        errorLog(err);
-        return;
-    }
-
-    fetchedBooks = formatBooks(response.data.items);
-
-    successLog(`\nTop 5 Books matching '${searchTerm}':\n`);
-    printBooks(fetchedBooks);
-};
-
-const formatBooks = (books) => {
-    return books.map((book) => {
-        return {
-            title: book.volumeInfo.title,
-            author: book.volumeInfo.authors ? book.volumeInfo.authors.join(', ') : 'N/A',
-            publisher: book.volumeInfo.publisher || 'N/A',
-        };
-    });
-};
-
 const printBooks = (books) => {
     books.forEach((book, idx) => {
         console.log(`
@@ -105,40 +74,10 @@ const printBooks = (books) => {
     });
 };
 
-const saveBook = (bookNumber) => {
-    let idx = parseInt(bookNumber) - 1;
-    let book = fetchedBooks[idx];
-    let readingList = [];
-    try {
-        readingList = fetchReadingList(readingListFilePath);
-        if (!isNewBook(readingList, book)) {
-            errorLog('This book is already on your reading list!');
-            return;
-        }
-        readingList.push(book);
-    } catch {
-        readingList = [book];
-    }
-    try {
-        jsonWriter(readingListFilePath, readingList);
-        successLog('Book successfully saved!');
-    } catch (err) {
-        errorLog(err);
-    }
-};
-
-const fetchReadingList = () => {
-    const readingList = jsonReader(readingListFilePath);
-    if (!readingList) {
-        throw 'Your Reading List is empty!';
-    }
-    return readingList;
-};
-
 const viewReadingList = () => {
     let readingList;
     try {
-        readingList = fetchReadingList();
+        readingList = bookService.fetchReadingList();
         console.log(`\n${chalk.yellow.bold('Your Reading List:')}\n`);
         printBooks(readingList);
     } catch (err) {
