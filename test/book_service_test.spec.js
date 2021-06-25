@@ -42,12 +42,15 @@ const testResponse = {
         items: [book1, book2],
     },
 };
+
 describe('BookService(filePath, api_key)', () => {
+    let bookService;
+
+    beforeEach(() => {
+        bookService = new BookService(testPath, testApiKey);
+    });
+
     describe('fetchBooks(searchTerm)', () => {
-        let bookService;
-        before(() => {
-            bookService = new BookService(testPath, testApiKey);
-        });
         it('should fetch the books', async () => {
             sinon.stub(axios, 'get').resolves(testResponse);
             await bookService.fetchBooks('test');
@@ -59,21 +62,18 @@ describe('BookService(filePath, api_key)', () => {
     });
 
     describe('formatBooks()', () => {
-        //formats author/publisher correctly.
-        let bookService;
-        before(() => {
-            bookService = new BookService(testPath, testApiKey);
-        });
         it('formats the books title, author and publisher correctly', () => {
             expect(bookService.formatBooks([book1])).to.eql([
                 { title: 'book1', author: 'author1', publisher: 'publisher1' },
             ]);
         });
+
         it('formats the book when there is more than 1 author', () => {
             expect(bookService.formatBooks([book2Authors])).to.eql([
                 { title: 'book2', author: 'author1, author2', publisher: 'publisher2' },
             ]);
         });
+
         it('formats the book correctly when there is no author or publisher', () => {
             expect(bookService.formatBooks([bookTitleOnly])).to.eql([
                 { title: 'Anonymous Book', author: 'N/A', publisher: 'N/A' },
@@ -82,10 +82,11 @@ describe('BookService(filePath, api_key)', () => {
     });
 
     describe('saveBook(bookNumber)', () => {
-        let bookService;
+        let bookServiceSave;
+
         before(() => {
-            bookService = new BookService(testPath, testApiKey);
-            bookService.fetchedBooks = [
+            bookServiceSave = new BookService(testPath, testApiKey);
+            bookServiceSave.fetchedBooks = [
                 { title: 'book1', author: 'author1', publisher: 'publisher1' },
                 { title: 'book2', author: 'author2', publisher: 'publisher2' },
             ];
@@ -96,19 +97,21 @@ describe('BookService(filePath, api_key)', () => {
         });
 
         it('saves a new book to the reading list', () => {
-            bookService.saveBook('1');
-            expect(bookService.fetchReadingList()).to.eql([
+            bookServiceSave.saveBook('1');
+            expect(bookServiceSave.fetchReadingList()).to.eql([
                 { title: 'book1', author: 'author1', publisher: 'publisher1' },
             ]);
         });
+
         it('does not erase the previous reading list', () => {
-            bookService.saveBook('2');
-            expect(bookService.fetchReadingList()).to.eql([
+            bookServiceSave.saveBook('2');
+            expect(bookServiceSave.fetchReadingList()).to.eql([
                 { title: 'book1', author: 'author1', publisher: 'publisher1' },
                 { title: 'book2', author: 'author2', publisher: 'publisher2' },
             ]);
         });
     });
+
     describe('fetchReadingList', () => {
         let bookService1;
         let bookService2;
@@ -117,11 +120,13 @@ describe('BookService(filePath, api_key)', () => {
             bookService1 = new BookService('./test/json_reader_test.json', testApiKey);
             bookService2 = new BookService(testPath, testApiKey);
         });
+
         it('returns the saved reading list', () => {
             expect(bookService1.fetchReadingList()).to.eql([
                 { title: 'book1', author: 'author1', publisher: 'publisher1' },
             ]);
         });
+
         it('throws an error if the reading list does not exist yet', () => {
             expect(bookService2.fetchReadingList).to.throw();
         });
