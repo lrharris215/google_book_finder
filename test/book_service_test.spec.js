@@ -49,6 +49,21 @@ describe('BookService(filePath, api_key)', () => {
             ]);
         });
     });
-    // describe('fetchReadingList');
-    // describe('viewReadingList');
+    describe('fetchReadingList', () => {
+        let bookService1;
+        let bookService2;
+
+        before(() => {
+            bookService1 = new BookService('./test/json_reader_test.json', testApiKey);
+            bookService2 = new BookService(testPath, testApiKey);
+        });
+        it('returns the saved reading list', () => {
+            expect(bookService1.fetchReadingList()).to.eql([
+                { title: 'book1', author: 'author1', publisher: 'publisher1' },
+            ]);
+        });
+        it('throws an error if the reading list does not exist yet', () => {
+            expect(bookService2.fetchReadingList).to.throw();
+        });
+    });
 });

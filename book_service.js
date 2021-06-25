@@ -62,7 +62,7 @@ export default class BookService {
     fetchReadingList = () => {
         const readingList = jsonReader(this.readingListFilePath);
         if (!readingList) {
-            throw 'Your Reading List is empty!';
+            throw new Error('Your Reading List is empty!');
         }
         return readingList;
     };
